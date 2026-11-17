@@ -56,6 +56,11 @@ add_filter(
 	2
 );
 
+/** Escape a title for a markdown link label: backslash first, then the brackets. */
+function csd_seo_md_escape( $text ) {
+	return str_replace( array( '\\', '[', ']' ), array( '\\\\', '\\[', '\\]' ), $text );
+}
+
 /** The text of llms.txt: only indexable pages, no email address. */
 function csd_seo_llms_text() {
 	$name = (string) ( csd_seo_opt( 'biz_name' ) ? csd_seo_opt( 'biz_name' ) : get_bloginfo( 'name' ) );
@@ -100,7 +105,7 @@ function csd_seo_llms_text() {
 		}
 		$out .= "\n## " . $heading . "\n\n";
 		foreach ( $ids as $id ) {
-			$out .= '- [' . str_replace( array( '[', ']' ), array( '\\[', '\\]' ), csd_seo_one_line( get_the_title( $id ) ) ) . '](' . get_permalink( $id ) . ')';
+			$out .= '- [' . csd_seo_md_escape( csd_seo_one_line( get_the_title( $id ) ) ) . '](' . get_permalink( $id ) . ')';
 			$note = (string) get_post_meta( $id, '_csd_seo_desc', true );
 			$out .= '' !== $note ? ': ' . $note : '';
 			$out .= "\n";

@@ -35,4 +35,4 @@ The plugin collects no user data and makes no requests to other sites. Uninstall
 == Changelog ==
 
 = 1.0.0 =
-* First release.
+* First release. Pages marked noindex or protected by a password get no Open Graph or Twitter tags, so they show no preview when shared.

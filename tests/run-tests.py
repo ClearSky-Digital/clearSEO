@@ -172,6 +172,24 @@ try:
     check("social: indexable page still has them", "og:title" in html)
     wp("post", "delete", pw, "--force")
 
+    bs = wp("post", "create", "--post_type=page", "--post_status=publish",
+            "--post_title=Back \\[x\\](http://evil.example) end\\", "--post_content=x", "--porcelain")
+    set_opt(mod_llms=1)
+    _, txt, _ = get("/llms.txt")
+    check("llms: backslashes in titles are escaped first", "[Back \\\\\\[x\\\\\\](http://evil.example) end\\\\]" in txt, txt)
+    wp("post", "delete", bs, "--force")
+
+    set_opt(mod_social=1, default_image="javascript:alert(1)")
+    _, html, _ = get("/?page_id=" + page)
+    check("social: no image tags when the address is unsafe", "og:image" not in html and "twitter:image" not in html and "twitter:card" in html)
+    pw2 = wp("post", "create", "--post_type=page", "--post_status=publish", "--post_title=CSD Locked Two",
+             "--post_content=x", "--post_password=pw", "--porcelain")
+    set_opt(mod_social=1, default_image="https://example.com/default.png")
+    _, h3, _ = get("/?page_id=" + pw2)
+    check("social: no social tags on a password page", "og:title" not in h3 and "twitter:card" not in h3)
+    wp("post", "delete", pw2, "--force")
+    set_opt(mod_social=1, mod_head=1, default_image="https://example.com/default.png")
+
     here = os.path.dirname(os.path.abspath(__file__))
     root = os.path.dirname(here)
     unins = open(os.path.join(root, "uninstall.php"), encoding="utf-8").read()

@@ -57,13 +57,13 @@ add_action(
 		if ( ! csd_seo_opt( 'mod_social' ) || ! ( is_singular() || is_front_page() ) ) {
 			return;
 		}
-		// A page marked noindex gets no social tags either, so its text is not advertised.
-		if ( is_singular() && get_post_meta( get_queried_object_id(), '_csd_seo_noindex', true ) ) {
+		// A page marked noindex, or protected by a password, gets no social tags either, so its text is not advertised.
+		if ( is_singular() && ( get_post_meta( get_queried_object_id(), '_csd_seo_noindex', true ) || post_password_required( get_queried_object_id() ) ) ) {
 			return;
 		}
 		$title = wp_get_document_title();
 		$url   = is_singular() ? get_permalink( get_queried_object_id() ) : home_url( '/' );
-		$image = csd_seo_current_image();
+		$image = esc_url( csd_seo_current_image() ); // Empty when the address is not a safe URL: then no image tags at all.
 		$tags  = array(
 			'og:locale'    => get_locale(),
 			'og:type'      => is_singular( 'post' ) ? 'article' : 'website',
