@@ -1,4 +1,4 @@
-"""Output tests for CSD SEO on a running local WordPress (Docker compose with a `cli` service running WP-CLI).
+"""Output tests for ClearSEO on a running local WordPress (Docker compose with a `cli` service running WP-CLI).
 
 Set CSD_SEO_TEST_COMPOSE to the compose folder and CSD_SEO_TEST_URL to the site address (default http://127.0.0.1:8095).
 The plugin must be active. The script changes the plugin option and test pages, and restores the option at the end.

@@ -1,12 +1,13 @@
-"""Build csd-seo.zip from the files git tracks, minus everything listed in .distignore.
+"""Build clearseo-<version>.zip from the files git tracks, minus everything listed in .distignore.
 
 Run from anywhere: python scripts/build-release.py [output-folder]
 Only tracked files can go in, so stray files (.env, logs, backups, old zips) never reach the package.
 The build refuses when a tracked file has uncommitted changes, so the zip always matches a commit.
-The zip holds one csd-seo/ folder. Paths are relative to this file.
+The zip holds one clearseo/ folder. Paths are relative to this file.
 """
 import fnmatch
 import os
+import re
 import subprocess
 import sys
 import zipfile
@@ -32,9 +33,10 @@ def skipped(rel):
     return any(fnmatch.fnmatch(p, pat) for p in rel.split("/") for pat in skip)
 
 
-target = os.path.join(OUT, "csd-seo.zip")
+VERSION = re.search(r"^\s*\*\s*Version:\s*(\S+)", open(os.path.join(ROOT, "clearseo.php"), encoding="utf-8").read(), re.M).group(1)
+target = os.path.join(OUT, "clearseo-%s.zip" % VERSION)
 with zipfile.ZipFile(target, "w", zipfile.ZIP_DEFLATED) as z:
     for rel in sorted(git("ls-files").splitlines()):
         if not skipped(rel):
-            z.write(os.path.join(ROOT, rel), "csd-seo/" + rel)
+            z.write(os.path.join(ROOT, rel), "clearseo/" + rel)
 print(target)

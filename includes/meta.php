@@ -81,7 +81,7 @@ add_action(
 	'add_meta_boxes',
 	function () {
 		foreach ( csd_seo_post_types() as $type ) {
-			add_meta_box( 'csd-seo', __( 'SEO', 'csd-seo' ), 'csd_seo_render_box', $type, 'normal', 'default', array( '__back_compat_meta_box' => true ) );
+			add_meta_box( 'clearseo', __( 'SEO', 'clearseo' ), 'csd_seo_render_box', $type, 'normal', 'default', array( '__back_compat_meta_box' => true ) );
 		}
 	}
 );
@@ -92,9 +92,9 @@ function csd_seo_render_box( $post ) {
 	$title = get_post_meta( $post->ID, '_csd_seo_title', true );
 	$desc  = get_post_meta( $post->ID, '_csd_seo_desc', true );
 	$no    = get_post_meta( $post->ID, '_csd_seo_noindex', true );
-	echo '<p><label for="csd-seo-title"><strong>' . esc_html__( 'Title (empty uses the page title)', 'csd-seo' ) . '</strong></label><br><input type="text" class="widefat" id="csd-seo-title" name="csd_seo_title" value="' . esc_attr( $title ) . '"></p>';
-	echo '<p><label for="csd-seo-desc"><strong>' . esc_html__( 'Meta description (about 150 to 160 characters)', 'csd-seo' ) . '</strong></label><br><textarea class="widefat" rows="3" id="csd-seo-desc" name="csd_seo_desc">' . esc_textarea( $desc ) . '</textarea></p>';
-	echo '<p><label><input type="checkbox" name="csd_seo_noindex" value="1"' . checked( (bool) $no, true, false ) . '> ' . esc_html__( 'Ask search engines not to index this page (noindex)', 'csd-seo' ) . '</label></p>';
+	echo '<p><label for="clearseo-title"><strong>' . esc_html__( 'Title (empty uses the page title)', 'clearseo' ) . '</strong></label><br><input type="text" class="widefat" id="clearseo-title" name="csd_seo_title" value="' . esc_attr( $title ) . '"></p>';
+	echo '<p><label for="clearseo-desc"><strong>' . esc_html__( 'Meta description (about 150 to 160 characters)', 'clearseo' ) . '</strong></label><br><textarea class="widefat" rows="3" id="clearseo-desc" name="csd_seo_desc">' . esc_textarea( $desc ) . '</textarea></p>';
+	echo '<p><label><input type="checkbox" name="csd_seo_noindex" value="1"' . checked( (bool) $no, true, false ) . '> ' . esc_html__( 'Ask search engines not to index this page (noindex)', 'clearseo' ) . '</label></p>';
 }
 
 add_action(

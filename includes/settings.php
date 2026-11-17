@@ -122,7 +122,7 @@ add_action(
 add_action(
 	'admin_menu',
 	function () {
-		add_options_page( __( 'CSD SEO', 'csd-seo' ), __( 'CSD SEO', 'csd-seo' ), 'manage_options', 'csd-seo', 'csd_seo_render_page' );
+		add_options_page( __( 'ClearSEO', 'clearseo' ), __( 'ClearSEO', 'clearseo' ), 'manage_options', 'clearseo', 'csd_seo_render_page' );
 	}
 );
 
@@ -154,23 +154,23 @@ function csd_seo_render_page() {
 	if ( ! current_user_can( 'manage_options' ) ) {
 		return;
 	}
-	echo '<div class="wrap"><h1>' . esc_html__( 'CSD SEO', 'csd-seo' ) . '</h1>';
+	echo '<div class="wrap"><h1>' . esc_html__( 'ClearSEO', 'clearseo' ) . '</h1>';
 	echo '<form method="post" action="options.php">';
 	settings_fields( 'csd_seo' );
 
-	echo '<h2>' . esc_html__( 'Modules', 'csd-seo' ) . '</h2><p>' . esc_html__( 'Each module is off until you switch it on. Switching one off removes its output at once; nothing is left behind.', 'csd-seo' ) . '</p><table class="form-table" role="presentation">';
-	csd_seo_row_check( 'mod_head', __( 'Page head', 'csd-seo' ), __( 'Meta description, title override and noindex per page', 'csd-seo' ) );
-	csd_seo_row_check( 'mod_social', __( 'Social tags', 'csd-seo' ), __( 'Open Graph and Twitter tags', 'csd-seo' ) );
-	csd_seo_row_check( 'mod_schema', __( 'Structured data', 'csd-seo' ), __( 'JSON-LD: business, website, page and breadcrumb', 'csd-seo' ) );
-	csd_seo_row_check( 'mod_sitemap', __( 'Sitemap trim', 'csd-seo' ), __( 'Drop the users sitemap, unused taxonomies and noindex pages', 'csd-seo' ) );
-	csd_seo_row_check( 'mod_robots', __( 'robots.txt', 'csd-seo' ), __( 'Write the robots.txt text (a real robots.txt file on the server wins over this)', 'csd-seo' ) );
-	csd_seo_row_check( 'mod_llms', __( 'llms.txt', 'csd-seo' ), __( 'Serve /llms.txt from the site\'s indexable pages', 'csd-seo' ) );
+	echo '<h2>' . esc_html__( 'Modules', 'clearseo' ) . '</h2><p>' . esc_html__( 'Each module is off until you switch it on. Switching one off removes its output at once; nothing is left behind.', 'clearseo' ) . '</p><table class="form-table" role="presentation">';
+	csd_seo_row_check( 'mod_head', __( 'Page head', 'clearseo' ), __( 'Meta description, title override and noindex per page', 'clearseo' ) );
+	csd_seo_row_check( 'mod_social', __( 'Social tags', 'clearseo' ), __( 'Open Graph and Twitter tags', 'clearseo' ) );
+	csd_seo_row_check( 'mod_schema', __( 'Structured data', 'clearseo' ), __( 'JSON-LD: business, website, page and breadcrumb', 'clearseo' ) );
+	csd_seo_row_check( 'mod_sitemap', __( 'Sitemap trim', 'clearseo' ), __( 'Drop the users sitemap, unused taxonomies and noindex pages', 'clearseo' ) );
+	csd_seo_row_check( 'mod_robots', __( 'robots.txt', 'clearseo' ), __( 'Write the robots.txt text (a real robots.txt file on the server wins over this)', 'clearseo' ) );
+	csd_seo_row_check( 'mod_llms', __( 'llms.txt', 'clearseo' ), __( 'Serve /llms.txt from the site\'s indexable pages', 'clearseo' ) );
 	echo '</table>';
 
-	echo '<h2>' . esc_html__( 'Defaults', 'csd-seo' ) . '</h2><table class="form-table" role="presentation">';
-	csd_seo_row_text( 'default_desc', __( 'Home page description', 'csd-seo' ), __( 'Used on the home page and as the llms.txt summary. Leave empty to use the tagline.', 'csd-seo' ) );
-	csd_seo_row_text( 'default_image', __( 'Default social image URL', 'csd-seo' ), __( 'Used when a page has no featured image.', 'csd-seo' ), 'url' );
-	echo '<tr><th scope="row">' . esc_html__( 'Taxonomies in the sitemap', 'csd-seo' ) . '</th><td>';
+	echo '<h2>' . esc_html__( 'Defaults', 'clearseo' ) . '</h2><table class="form-table" role="presentation">';
+	csd_seo_row_text( 'default_desc', __( 'Home page description', 'clearseo' ), __( 'Used on the home page and as the llms.txt summary. Leave empty to use the tagline.', 'clearseo' ) );
+	csd_seo_row_text( 'default_image', __( 'Default social image URL', 'clearseo' ), __( 'Used when a page has no featured image.', 'clearseo' ), 'url' );
+	echo '<tr><th scope="row">' . esc_html__( 'Taxonomies in the sitemap', 'clearseo' ) . '</th><td>';
 	foreach ( get_taxonomies( array( 'public' => true ), 'objects' ) as $tax ) {
 		printf(
 			'<label><input type="checkbox" name="csd_seo[sitemap_taxonomies][]" value="%1$s"%2$s> %3$s</label><br>',
@@ -179,39 +179,39 @@ function csd_seo_render_page() {
 			esc_html( $tax->labels->name )
 		);
 	}
-	echo '<p class="description">' . esc_html__( 'Checked ones stay in the sitemap when the sitemap trim is on. The rest are dropped.', 'csd-seo' ) . '</p></td></tr>';
+	echo '<p class="description">' . esc_html__( 'Checked ones stay in the sitemap when the sitemap trim is on. The rest are dropped.', 'clearseo' ) . '</p></td></tr>';
 	echo '</table>';
 
-	echo '<h2>' . esc_html__( 'Business facts', 'csd-seo' ) . '</h2><p>' . esc_html__( 'Enter only facts that are true and shown on the site. Empty fields are left out of the structured data.', 'csd-seo' ) . '</p><table class="form-table" role="presentation">';
-	echo '<tr><th scope="row"><label for="csd-biz_type">' . esc_html__( 'Type', 'csd-seo' ) . '</label></th><td><select id="csd-biz_type" name="csd_seo[biz_type]">';
+	echo '<h2>' . esc_html__( 'Business facts', 'clearseo' ) . '</h2><p>' . esc_html__( 'Enter only facts that are true and shown on the site. Empty fields are left out of the structured data.', 'clearseo' ) . '</p><table class="form-table" role="presentation">';
+	echo '<tr><th scope="row"><label for="csd-biz_type">' . esc_html__( 'Type', 'clearseo' ) . '</label></th><td><select id="csd-biz_type" name="csd_seo[biz_type]">';
 	foreach ( csd_seo_business_types() as $value => $label ) {
 		printf( '<option value="%s"%s>%s</option>', esc_attr( $value ), selected( csd_seo_opt( 'biz_type' ), $value, false ), esc_html( $label ) );
 	}
 	echo '</select></td></tr>';
-	csd_seo_row_text( 'biz_name', __( 'Name', 'csd-seo' ), __( 'Empty uses the site title.', 'csd-seo' ) );
-	csd_seo_row_text( 'biz_logo', __( 'Logo URL', 'csd-seo' ), '', 'url' );
-	csd_seo_row_text( 'biz_phone', __( 'Phone', 'csd-seo' ) );
-	csd_seo_row_text( 'biz_street', __( 'Street address', 'csd-seo' ) );
-	csd_seo_row_text( 'biz_locality', __( 'City', 'csd-seo' ) );
-	csd_seo_row_text( 'biz_region', __( 'State or region', 'csd-seo' ) );
-	csd_seo_row_text( 'biz_postal', __( 'Postal code', 'csd-seo' ) );
-	csd_seo_row_text( 'biz_country', __( 'Country (two-letter code)', 'csd-seo' ) );
-	csd_seo_row_text( 'biz_area', __( 'Area served', 'csd-seo' ), __( 'For example a city or island.', 'csd-seo' ) );
+	csd_seo_row_text( 'biz_name', __( 'Name', 'clearseo' ), __( 'Empty uses the site title.', 'clearseo' ) );
+	csd_seo_row_text( 'biz_logo', __( 'Logo URL', 'clearseo' ), '', 'url' );
+	csd_seo_row_text( 'biz_phone', __( 'Phone', 'clearseo' ) );
+	csd_seo_row_text( 'biz_street', __( 'Street address', 'clearseo' ) );
+	csd_seo_row_text( 'biz_locality', __( 'City', 'clearseo' ) );
+	csd_seo_row_text( 'biz_region', __( 'State or region', 'clearseo' ) );
+	csd_seo_row_text( 'biz_postal', __( 'Postal code', 'clearseo' ) );
+	csd_seo_row_text( 'biz_country', __( 'Country (two-letter code)', 'clearseo' ) );
+	csd_seo_row_text( 'biz_area', __( 'Area served', 'clearseo' ), __( 'For example a city or island.', 'clearseo' ) );
 	printf(
 		'<tr><th scope="row"><label for="csd-biz_same_as">%s</label></th><td><textarea id="csd-biz_same_as" class="large-text" rows="4" name="csd_seo[biz_same_as]">%s</textarea><p class="description">%s</p></td></tr>',
-		esc_html__( 'Profile links', 'csd-seo' ),
+		esc_html__( 'Profile links', 'clearseo' ),
 		esc_textarea( csd_seo_opt( 'biz_same_as' ) ),
-		esc_html__( 'One web address per line (social and directory profiles).', 'csd-seo' )
+		esc_html__( 'One web address per line (social and directory profiles).', 'clearseo' )
 	);
 	echo '</table>';
 
-	echo '<h2>' . esc_html__( 'robots.txt', 'csd-seo' ) . '</h2><table class="form-table" role="presentation">';
-	csd_seo_row_text( 'robots_signal', __( 'Content-Signal', 'csd-seo' ), __( 'Preference signal for crawlers. Empty leaves the line out.', 'csd-seo' ) );
+	echo '<h2>' . esc_html__( 'robots.txt', 'clearseo' ) . '</h2><table class="form-table" role="presentation">';
+	csd_seo_row_text( 'robots_signal', __( 'Content-Signal', 'clearseo' ), __( 'Preference signal for crawlers. Empty leaves the line out.', 'clearseo' ) );
 	printf(
 		'<tr><th scope="row"><label for="csd-robots_block">%s</label></th><td><textarea id="csd-robots_block" class="large-text" rows="6" name="csd_seo[robots_block]">%s</textarea><p class="description">%s</p></td></tr>',
-		esc_html__( 'Crawlers to block', 'csd-seo' ),
+		esc_html__( 'Crawlers to block', 'clearseo' ),
 		esc_textarea( csd_seo_opt( 'robots_block' ) ),
-		esc_html__( 'One crawler name per line (for example GPTBot or CCBot). Search crawlers stay allowed.', 'csd-seo' )
+		esc_html__( 'One crawler name per line (for example GPTBot or CCBot). Search crawlers stay allowed.', 'clearseo' )
 	);
 	echo '</table>';
 

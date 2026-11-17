@@ -1,8 +1,8 @@
-# CSD SEO
+# ClearSEO
 
-A small WordPress plugin that controls the SEO outputs of a site on core APIs only. No dependencies, no update cycle to follow, nothing runs until a module is switched on in Settings, CSD SEO.
+A small WordPress plugin that controls the SEO outputs of a site on core APIs only. No dependencies, no update cycle to follow, nothing runs until a module is switched on in Settings, ClearSEO.
 
-Built and maintained by [ClearSky Digital](https://cscloud.digital).
+Built and maintained by [ClearSky Digital](https://cscloud.digital). Source: [github.com/ClearSky-Digital/clearseo](https://github.com/ClearSky-Digital/clearseo). Renamed from CSD SEO in 1.1.0; saved settings carry over.
 
 | Module | What it does | Core API |
 |---|---|---|

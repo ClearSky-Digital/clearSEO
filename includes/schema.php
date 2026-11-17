@@ -59,7 +59,7 @@ function csd_seo_business_node() {
 
 /** The breadcrumb for a singular page: Home, ancestors (pages) and the page itself. */
 function csd_seo_breadcrumb_node( $post_id ) {
-	$items = array( array( __( 'Home', 'csd-seo' ), home_url( '/' ) ) );
+	$items = array( array( __( 'Home', 'clearseo' ), home_url( '/' ) ) );
 	foreach ( array_reverse( get_post_ancestors( $post_id ) ) as $anc ) {
 		$items[] = array( get_the_title( $anc ), get_permalink( $anc ) );
 	}
