@@ -100,7 +100,7 @@ function csd_seo_llms_text() {
 		}
 		$out .= "\n## " . $heading . "\n\n";
 		foreach ( $ids as $id ) {
-			$out .= '- [' . csd_seo_plain( get_the_title( $id ) ) . '](' . get_permalink( $id ) . ')';
+			$out .= '- [' . str_replace( array( '[', ']' ), array( '\\[', '\\]' ), csd_seo_one_line( get_the_title( $id ) ) ) . '](' . get_permalink( $id ) . ')';
 			$note = (string) get_post_meta( $id, '_csd_seo_desc', true );
 			$out .= '' !== $note ? ': ' . $note : '';
 			$out .= "\n";

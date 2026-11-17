@@ -2,7 +2,7 @@
 /**
  * Plugin Name: CSD SEO
  * Plugin URI: https://cscloud.digital/
- * Description: Small, dependency-free SEO outputs on core WordPress APIs: title and description per page, robots, social tags, JSON-LD, a trimmed sitemap, robots.txt and llms.txt. Every module is off until switched on.
+ * Description: Small SEO outputs on core WordPress APIs: titles, descriptions, JSON-LD, sitemap, robots.txt and llms.txt. Every module is off until you turn it on.
  * Version: 1.0.0
  * Requires at least: 6.4
  * Requires PHP: 7.4

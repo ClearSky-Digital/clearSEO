@@ -18,7 +18,7 @@ function csd_seo_uninstall_site() {
 }
 
 if ( is_multisite() ) {
-	foreach ( get_sites( array( 'fields' => 'ids' ) ) as $csd_seo_blog_id ) {
+	foreach ( get_sites( array( 'fields' => 'ids', 'number' => 0 ) ) as $csd_seo_blog_id ) {
 		switch_to_blog( $csd_seo_blog_id );
 		csd_seo_uninstall_site();
 		restore_current_blog();

@@ -57,6 +57,10 @@ add_action(
 		if ( ! csd_seo_opt( 'mod_social' ) || ! ( is_singular() || is_front_page() ) ) {
 			return;
 		}
+		// A page marked noindex gets no social tags either, so its text is not advertised.
+		if ( is_singular() && get_post_meta( get_queried_object_id(), '_csd_seo_noindex', true ) ) {
+			return;
+		}
 		$title = wp_get_document_title();
 		$url   = is_singular() ? get_permalink( get_queried_object_id() ) : home_url( '/' );
 		$image = csd_seo_current_image();
@@ -74,6 +78,10 @@ add_action(
 			$tags['og:image'] = $image;
 		}
 		foreach ( $tags as $prop => $value ) {
+			if ( 'og:image' === $prop ) {
+				echo '<meta property="og:image" content="' . esc_url( $value ) . "\">\n";
+				continue;
+			}
 			echo '<meta property="' . esc_attr( $prop ) . '" content="' . esc_attr( $value ) . "\">\n";
 		}
 		echo '<meta name="twitter:card" content="' . ( '' !== $image ? 'summary_large_image' : 'summary' ) . "\">\n";

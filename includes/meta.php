@@ -34,6 +34,11 @@ function csd_seo_plain( $text ) {
 	return html_entity_decode( wp_strip_all_tags( (string) $text ), ENT_QUOTES, 'UTF-8' );
 }
 
+/** A title as one line of plain text: control characters and runs of whitespace become one space. */
+function csd_seo_one_line( $text ) {
+	return trim( (string) preg_replace( '/[\p{Cc}\p{Cf}\p{Z}\s]+/u', ' ', csd_seo_plain( $text ) ) );
+}
+
 /** Post types that get the fields: every public type with an editor. */
 function csd_seo_post_types() {
 	$types = get_post_types( array( 'public' => true ), 'names' );
@@ -57,7 +62,10 @@ add_action(
 					array(
 						'type'              => $def[0],
 						'single'            => true,
-						'show_in_rest'      => true,
+						// Edit context only: anonymous readers never get these values, so a protected page's text stays private.
+						'show_in_rest'      => array(
+							'schema' => array( 'context' => array( 'edit' ) ),
+						),
 						'sanitize_callback' => $def[1],
 						'auth_callback'     => function ( $allowed, $meta_key, $post_id ) {
 							return current_user_can( 'edit_post', $post_id );
@@ -80,7 +88,7 @@ add_action(
 
 /** The meta box. */
 function csd_seo_render_box( $post ) {
-	wp_nonce_field( 'csd_seo_save', 'csd_seo_nonce' );
+	wp_nonce_field( 'csd_seo_save_' . $post->ID, 'csd_seo_nonce' );
 	$title = get_post_meta( $post->ID, '_csd_seo_title', true );
 	$desc  = get_post_meta( $post->ID, '_csd_seo_desc', true );
 	$no    = get_post_meta( $post->ID, '_csd_seo_noindex', true );
@@ -92,7 +100,7 @@ function csd_seo_render_box( $post ) {
 add_action(
 	'save_post',
 	function ( $post_id ) {
-		if ( ! isset( $_POST['csd_seo_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['csd_seo_nonce'] ) ), 'csd_seo_save' ) ) {
+		if ( ! isset( $_POST['csd_seo_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['csd_seo_nonce'] ) ), 'csd_seo_save_' . $post_id ) ) {
 			return;
 		}
 		if ( wp_is_post_revision( $post_id ) || ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) ) {

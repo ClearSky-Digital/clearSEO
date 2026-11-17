@@ -144,6 +144,40 @@ try:
     check("llms: indexable page listed", "CSD Test Page" in txt)
     check("llms: noindex page absent", "CSD Hidden Page" not in txt)
     check("llms: no email", re.search(r"[\w.+-]+@[\w-]+\.[\w.-]+", txt) is None)
+    # 8. Security hardening (review 2026-11-17).
+    pw = wp("post", "create", "--post_type=page", "--post_status=publish", "--post_title=CSD Locked Page",
+            "--post_content=Locked", "--post_password=secret1", "--porcelain")
+    wp("post", "meta", "update", pw, "_csd_seo_desc", "PWSECRETDESC")
+    wp("post", "meta", "update", pw, "_csd_seo_title", "PWSECRETTITLE")
+    _, rest, _ = get("/wp-json/wp/v2/pages/" + pw)
+    check("rest: protected page SEO text not shown to anonymous readers", "PWSECRETDESC" not in rest and "PWSECRETTITLE" not in rest)
+    _, rest, _ = get("/wp-json/wp/v2/pages/" + page)
+    check("rest: no SEO meta for anonymous readers on any page", "A test description" not in rest and "Custom Title Here" not in rest)
+
+    messy = wp("post", "create", "--post_type=page", "--post_status=publish",
+               "--post_title=Line one\n## Injected\n- [x](http://evil)", "--post_content=x", "--porcelain")
+    set_opt(mod_llms=1)
+    _, txt, _ = get("/llms.txt")
+    check("llms: title with newlines stays on one line", not re.search(r"^## Injected", txt, re.M) and "Line one ## Injected" in txt, txt)
+    check("llms: brackets in titles are escaped", "\\[x\\]" in txt, txt)
+    wp("post", "delete", messy, "--force")
+
+    set_opt(mod_social=1, default_image="javascript:alert(1)")
+    _, html, _ = get("/?page_id=" + page)
+    check("social: og:image never carries a javascript: value", "javascript:" not in html)
+    set_opt(mod_social=1, mod_head=1, default_image="https://example.com/default.png")
+    _, h2, _ = get("/?page_id=" + hidden)
+    check("social: no social tags on a noindex page", "og:title" not in h2 and "twitter:card" not in h2)
+    _, html, _ = get("/?page_id=" + page)
+    check("social: indexable page still has them", "og:title" in html)
+    wp("post", "delete", pw, "--force")
+
+    here = os.path.dirname(os.path.abspath(__file__))
+    root = os.path.dirname(here)
+    unins = open(os.path.join(root, "uninstall.php"), encoding="utf-8").read()
+    check("uninstall: multisite lists every site", "'number' => 0" in unins)
+    metaphp = open(os.path.join(root, "includes", "meta.php"), encoding="utf-8").read()
+    check("meta box nonce is tied to the post", "'csd_seo_save_' . $post->ID" in metaphp and "'csd_seo_save_' . $post_id" in metaphp)
 finally:
     wp("post", "delete", page, hidden, "--force")
     if saved:
