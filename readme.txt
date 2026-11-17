@@ -5,8 +5,8 @@ Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
 Stable tag: 1.0.0
-License: MIT
-License URI: https://opensource.org/licenses/MIT
+License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 Small SEO outputs on core WordPress APIs: titles, descriptions, JSON-LD, sitemap, robots.txt and llms.txt. Every module is off until you turn it on.
 

@@ -24,3 +24,7 @@ Business facts are entered by hand in the settings. Empty fields are left out of
 Uninstalling deletes the `csd_seo` option and the three meta keys. The plugin adds no rewrite rules, tables or files.
 
 Tests: `tests/run-tests.py` (see the file header).
+
+## License
+
+GNU General Public License, version 2 or later. Copyright (C) 2026 ClearSky Digital LLC (https://cscloud.digital). See [LICENSE](LICENSE).

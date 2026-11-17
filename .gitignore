@@ -1,2 +1,11 @@
 .agent/
 *.log
+*.zip
+.env
+.env.*
+*.bak
+*.swp
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
