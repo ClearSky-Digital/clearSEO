@@ -86,6 +86,9 @@ try:
     check("social: default image", 'property="og:image" content="https://example.com/default.png"' in html)
     check("social: twitter card", 'name="twitter:card" content="summary_large_image"' in html)
 
+    _, srch, _ = get("/?s=test")
+    check("social: none on search pages", "og:title" not in srch)
+
     # 4. Schema.
     set_opt(mod_schema=1, biz_type="RealEstateAgent", biz_name="Test Realty", biz_street="1 Main St",
             biz_locality="Honolulu", biz_region="HI", biz_postal="96814", biz_country="US",
@@ -116,6 +119,10 @@ try:
     _, pages, _ = get("/wp-sitemap-posts-page-1.xml")
     check("sitemap: noindex page excluded", "CSD+Hidden" not in pages and "page_id=" + hidden not in pages and "csd-hidden-page" not in pages)
     check("sitemap: test page included", "csd-test-page" in pages or "page_id=" + page in pages)
+    wp("post", "meta", "update", page, "_csd_seo_noindex", "0")
+    _, pages, _ = get("/wp-sitemap-posts-page-1.xml")
+    check("sitemap: noindex stored as 0 stays listed", "csd-test-page" in pages)
+    wp("post", "meta", "delete", page, "_csd_seo_noindex")
     set_opt()
     _, idx, _ = get("/wp-sitemap.xml")
     check("sitemap off: users back", "wp-sitemap-users" in idx)

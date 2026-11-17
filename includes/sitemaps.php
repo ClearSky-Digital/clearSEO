@@ -33,12 +33,9 @@ add_filter(
 	'wp_sitemaps_posts_query_args',
 	function ( $args ) {
 		if ( csd_seo_opt( 'mod_sitemap' ) ) {
-			$args['meta_query'] = array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- small, public-only query.
-				array(
-					'key'     => '_csd_seo_noindex',
-					'compare' => 'NOT EXISTS',
-				),
-			);
+			$existing           = isset( $args['meta_query'] ) ? (array) $args['meta_query'] : array();
+			$args['has_password'] = false;
+			$args['meta_query'] = array_merge( $existing, array( csd_seo_indexable_meta_query() ) ); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- small, public-only query.
 		}
 		return $args;
 	}

@@ -9,6 +9,31 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * A meta query that keeps only pages that are not marked noindex (key missing, empty or 0).
+ *
+ * @return array
+ */
+function csd_seo_indexable_meta_query() {
+	return array(
+		'relation' => 'OR',
+		array(
+			'key'     => '_csd_seo_noindex',
+			'compare' => 'NOT EXISTS',
+		),
+		array(
+			'key'     => '_csd_seo_noindex',
+			'value'   => array( '', '0' ),
+			'compare' => 'IN',
+		),
+	);
+}
+
+/** A title as plain text: tags removed, entities decoded. */
+function csd_seo_plain( $text ) {
+	return html_entity_decode( wp_strip_all_tags( (string) $text ), ENT_QUOTES, 'UTF-8' );
+}
+
 /** Post types that get the fields: every public type with an editor. */
 function csd_seo_post_types() {
 	$types = get_post_types( array( 'public' => true ), 'names' );
@@ -70,7 +95,7 @@ add_action(
 		if ( ! isset( $_POST['csd_seo_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['csd_seo_nonce'] ) ), 'csd_seo_save' ) ) {
 			return;
 		}
-		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+		if ( wp_is_post_revision( $post_id ) || ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) ) {
 			return;
 		}
 		if ( ! current_user_can( 'edit_post', $post_id ) ) {
@@ -102,6 +127,9 @@ add_action(
  */
 function csd_seo_current_description() {
 	if ( is_singular() ) {
+		if ( post_password_required( get_queried_object_id() ) ) {
+			return '';
+		}
 		$desc = get_post_meta( get_queried_object_id(), '_csd_seo_desc', true );
 		if ( '' !== (string) $desc ) {
 			return (string) $desc;

@@ -27,8 +27,9 @@ add_filter(
 			$rules[] = 'Content-Signal: ' . $signal;
 		}
 		$rules[] = 'Allow: /';
-		$rules[] = 'Disallow: /wp-admin/';
-		$rules[] = 'Allow: /wp-admin/admin-ajax.php';
+		$admin   = wp_parse_url( site_url( 'wp-admin/' ), PHP_URL_PATH );
+		$rules[] = 'Disallow: ' . $admin;
+		$rules[] = 'Allow: ' . $admin . 'admin-ajax.php';
 
 		$lines   = array( 'User-agent: *' );
 		$lines   = array_merge( $lines, $rules, array( '' ) );
@@ -45,8 +46,9 @@ add_filter(
 			$lines[] = 'Disallow: /';
 			$lines[] = '';
 		}
-		if ( function_exists( 'get_sitemap_url' ) ) {
-			$lines[] = 'Sitemap: ' . get_sitemap_url( 'index' );
+		$sitemap = function_exists( 'get_sitemap_url' ) ? get_sitemap_url( 'index' ) : false;
+		if ( $sitemap ) {
+			$lines[] = 'Sitemap: ' . $sitemap;
 		}
 		return implode( "\n", $lines ) . "\n";
 	},
@@ -90,12 +92,7 @@ function csd_seo_llms_text() {
 				'orderby'        => $q[2],
 				'order'          => $q[3],
 				'fields'         => 'ids',
-				'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- small query.
-					array(
-						'key'     => '_csd_seo_noindex',
-						'compare' => 'NOT EXISTS',
-					),
-				),
+				'meta_query'     => array( csd_seo_indexable_meta_query() ), // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- small query.
 			)
 		);
 		if ( ! $ids ) {
@@ -103,7 +100,7 @@ function csd_seo_llms_text() {
 		}
 		$out .= "\n## " . $heading . "\n\n";
 		foreach ( $ids as $id ) {
-			$out .= '- [' . wp_strip_all_tags( get_the_title( $id ) ) . '](' . get_permalink( $id ) . ')';
+			$out .= '- [' . csd_seo_plain( get_the_title( $id ) ) . '](' . get_permalink( $id ) . ')';
 			$note = (string) get_post_meta( $id, '_csd_seo_desc', true );
 			$out .= '' !== $note ? ': ' . $note : '';
 			$out .= "\n";

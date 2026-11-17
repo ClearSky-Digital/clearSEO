@@ -69,7 +69,7 @@ function csd_seo_breadcrumb_node( $post_id ) {
 		$entry = array(
 			'@type'    => 'ListItem',
 			'position' => $i + 1,
-			'name'     => wp_strip_all_tags( $item[0] ),
+			'name'     => csd_seo_plain( $item[0] ),
 		);
 		// Google allows the last item to omit the address; keep it for clarity.
 		$entry['item'] = $item[1];
@@ -104,7 +104,7 @@ function csd_seo_build_graph() {
 			'@type'         => 'WebPage',
 			'@id'           => $url . '#webpage',
 			'url'           => $url,
-			'name'          => wp_strip_all_tags( get_the_title( $id ) ),
+			'name'          => csd_seo_plain( get_the_title( $id ) ),
 			'isPartOf'      => array( '@id' => home_url( '/#website' ) ),
 			'datePublished' => get_the_date( 'c', $id ),
 			'dateModified'  => get_the_modified_date( 'c', $id ),
@@ -143,6 +143,9 @@ add_action(
 	'wp_head',
 	function () {
 		if ( ! csd_seo_opt( 'mod_schema' ) || is_404() || is_search() || is_feed() ) {
+			return;
+		}
+		if ( is_singular() && get_post_meta( get_queried_object_id(), '_csd_seo_noindex', true ) ) {
 			return;
 		}
 		$json = wp_json_encode( csd_seo_build_graph(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP );

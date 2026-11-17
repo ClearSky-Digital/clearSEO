@@ -72,6 +72,9 @@ function csd_seo_sanitize( $in ) {
 	$out  = array();
 	$urls = array( 'default_image', 'biz_logo' );
 	foreach ( $def as $key => $default ) {
+		if ( isset( $in[ $key ] ) && is_array( $in[ $key ] ) && 'sitemap_taxonomies' !== $key ) {
+			$in[ $key ] = '';
+		}
 		if ( 0 === strpos( $key, 'mod_' ) ) {
 			$out[ $key ] = empty( $in[ $key ] ) ? 0 : 1;
 		} elseif ( 'sitemap_taxonomies' === $key ) {

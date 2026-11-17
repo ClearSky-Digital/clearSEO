@@ -54,7 +54,7 @@ add_action(
 		if ( csd_seo_opt( 'mod_head' ) && '' !== $desc ) {
 			echo '<meta name="description" content="' . esc_attr( $desc ) . "\">\n";
 		}
-		if ( ! csd_seo_opt( 'mod_social' ) ) {
+		if ( ! csd_seo_opt( 'mod_social' ) || ! ( is_singular() || is_front_page() ) ) {
 			return;
 		}
 		$title = wp_get_document_title();
